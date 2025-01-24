@@ -1,0 +1,6 @@
+on utilise gcc pour compiler un programme c++
+pour compiler: 
+    1- taper: g++ hello.cpp -o hello -> compiler et genere un executable
+    2- taper: ./hello                -> executer l'executable
+
+ return 0; // Indique que le programme s'est terminé avec succès, si c'est pas 0 c'est que ya eu un probleme
