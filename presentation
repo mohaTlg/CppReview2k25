@@ -1,0 +1,16 @@
+Bonjour à tous, Je suis D… aujourd’hui je fais une presentation sur l’evolution de mon stage intutulé «VSCode Extension pour un module de cybersecurity du compilateur LLVM ». Je suis accompagné de mes deux encadreurs, CR et FDF, de l'équipe CCC. Oui, j'ai la chance d'avoir deux encadreurs pour m'accompagner dans cette aventure !
+Pour commencer, je vais me présenter, partager quelques informations sur moi-même et expliquer ce qui m'a motivé à choisir ce stage. Ensuite, je vous donnerai une vue d'ensemble de VSCode pour établir le contexte global.
+Nous passerons ensuite aux extensions VSCode, en nous concentrant sur celles développées au sein de l'équipe CCC. Puis, parler de SecSwift je vous expliquerai le lien entre SecSwift et ces extensions VSCode.
+Enfin, je terminerai par les perspectives futures.
+Je m’appelle Diallo Moh.., Etudiant en Master Informatique à ISIMA (de l’INP de clermont Ferrand). Dans le cadre de ma formation je dois effectuer un stage de 3 à 5 mois afin
+
+
+
+Je m’appel Diallo Mohamed Moussa, Etudiant en Master informatique à ISIMA (de l’INP de clermont Ferrand)
+Visual Studio Code, souvent appelé VS Code, est un éditeur de code source développé par Microsoft.  Il est disponible sur Windows, macOS et Linux, ce qui le rend accessible à tous (Multiplatforme). Il  prend en charge de nombreux langages de programmation, tels que JavaScript, Python, C++, et bien d'autres.
+VSCode est un IDE (environnement de développement intégré), et comme toute ide on peut etendre ses fonctionalités, Dans eclipse et dans inteliji on appel plugin, dans vs code on appel extension
+Il dispose d'une vaste bibliothèque d'extensions pour ajouter des fonctionnalités supplémentaires comme IntelliSence, github, Remote-ssh, Prettier, Docker
+
+
+STxP Compiler Explorer
+This extension allows you to compile code through Compiler Explorer view integrated in VSCode. To use this feature, you will need to open the file you wish to compile. Then, open the Command Palette and search Compile with Compiler Explorer.
