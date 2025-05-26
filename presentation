@@ -12,21 +12,66 @@ La seconde raison est liée le terme "compilation". Cela m'a rappelé mes cours 
 
 
 Visual Studio Code, souvent appelé VS Code, est un éditeur de code source développé par Microsoft qui a rapidement gagné en popularité parmi les développeurs. Dans le sondage auprès des développeurs réalisé par Stack Overflow en 2023, Visual Studio Code a été classé comme l'outil d'environnement de développement (IDE) le plus populaire, avec plus de 73 % des 86 544 répondants déclarant l'utiliser. Ce qui distingue VS Code, c'est sa capacité à être léger et rapide tout en offrant une extensibilité remarquable. Disponible sur Windows, macOS et Linux, il est accessible à une large gamme d'utilisateurs, ce qui en fait un choix universel pour le développement.
-VS Code est editeur de code source, mais on peut aussi le designé comme un IDE (environnement de développement intégré), et comme tout IDE, on peut étendre ses fonctionnalités. Dans d'autres environnements comme Eclipse et IntelliJ, ces ajouts sont appelés "plugins", tandis que dans VS Code, on les appelle "extensions". Ces extensions permettent d'ajouter des fonctionnalités supplémentaires, comme des outils de débogage et des intégrations avec des services cloud, rendant l'éditeur encore plus puissant et adapté aux besoins spécifiques des développeurs.
 VSCode à été publié en novembre 2015, il est codé en electron, un framework developpé par github, qui permet de développer des application multi-plateformes de bureau en utilisant les technologies du web (HTML, CSS, JavaScript, TS) comme Teams (l’app sur lequel on est pour cette presentation, Twitch, WhatsApp Desktop…)
 L'une des caractéristiques les plus appréciées de VS Code est son support pour de nombreux langages de programmation, tels que JavaScript, Python, C++, et bien d'autres. Grâce à sa vaste bibliothèque d'extensions, les développeurs peuvent facilement ajouter le support pour presque n'importe quel langage.
-VS Code est également connu pour son IntelliSense, qui offre une autocomplétion intelligente et des suggestions de code basées sur le contexte, améliorant ainsi la productivité. L'intégration Git est directement intégrée dans l'éditeur, permettant de gérer le contrôle de version sans quitter l'environnement de développement, ce qui est un atout majeur pour les équipes qui travaillent en collaboration.
-Le débogage est une autre force de VS Code, avec des outils puissants qui permettent de tester et de corriger le code directement depuis l'éditeur. En plus de ses fonctionnalités techniques, VS Code bénéficie d'une communauté active qui contribue à son amélioration continue par le biais de nouvelles extensions et mises à jour. Microsoft fournit également une documentation exhaustive et des tutoriels pour aider les utilisateurs à tirer le meilleur parti de cet éditeur.
+VS Code est un IDE (environnement de développement intégré), et comme tout IDE, on peut étendre ses fonctionnalités. Dans d'autres environnements comme Eclipse et IntelliJ, ces ajouts sont appelés "plugins", tandis que dans VS Code, on les appelle "extensions". Ces extensions permettent d'ajouter des fonctionnalités supplémentaires, comme :
+IntelliSense, qui offre une autocomplétion intelligente et des suggestions de code basées sur le contexte, améliorant ainsi la productivité. L'intégration Git est directement intégrée dans l'éditeur, permettant de gérer le contrôle de version sans quitter l'environnement de développement, ce qui est un atout majeur pour les équipes qui travaillent en collaboration.
+Le débogage est une autre force de VS Code, avec des outils puissants qui permettent de tester et de corriger le code directement depuis l'éditeur. En plus de ses fonctionnalités techniques, VS Code bénéficie d'une communauté active qui contribue à son amélioration continue par le biais de nouvelles extensions et mises à jour. 
+Microsoft fournit également une documentation exhaustive et des tutoriels accessible ici : Documentation for Visual Studio Code pour aider les utilisateurs à tirer le meilleur parti de cet éditeur.
 
 
 
 
+L'équipe CCC a déjà créé plusieurs extensions pour Visual Studio Code, chacune apportant des fonctionnalités spécifiques pour améliorer l'expérience de développement :
+•	STxP Compiler Explorer : Cette extension permet de compiler du code via une vue intégrée de Compiler Explorer dans VS Code.
+•	STxP Debug Tools : Elle implémente un adaptateur de débogage pour SXGDB et introduit de nouvelles commandes, des extraits de configuration, ainsi que des vues telles que le désassemblage et la microtrace.
+•	STxP Disassembly Explorer : Cette extension permet la navigation croisée entre le code source C et le code désassemblé correspondant, avec une mise en évidence spécifique des lignes d'assemblage SecSwift.
+•	STxP Memory Mapping : Cette extension calcule et affiche la cartographie mémoire des variables dans un fichier binaire.
+•	STxP Profiling : Elle fournit une visualisation sous forme de flamegraph du profilage d'un fichier binaire.
+•	STxP Project Manager : Permet de créer et de configurer un nouveau projet avec une configuration spécifique.
+•	STxP Remote Helper : Fournit des outils pour travailler dans un environnement remote-ssh.
+•	STxP Rompatch Configuration : Offre une interface graphique pour générer un rompatch pour une application.
+•	STxP SecSwift Annotations : Étend Visual Studio Code avec la complétion de mots-clés SecSwift et des annotations intégrées dans l'éditeur.
+•	STxP Versions : Affiche la version de l'ensemble d'outils dans une Webview de Visual Studio Code.
+Pour le moment j’ai principalement travaillé sur les extensions STxp disassembly Explorer et secswift annotation
+STxP Disassembly Explorer de VSCode fournit une vue en assembleur du code binaire où les instructions générées par SecSwift sont mises en évidence. Ces informations sont utiles pour vérifier que les protections sont effectivement présentes dans le code binaire final de l'application et pour examiner le code généré. Dans cette vue, les différentes protections SecSwift sont mises en évidence par des couleurs différentes, offrant une vue claire de quelles protections sont générées, où et comment.
+Comment l’utiliser ?
+Déjà il faut commencer par l’installer : il ya deux façons d’installer des extensions sur vscode, soit passer par le marketplace ou via vsix,  Étant donné que nos extensions ne sont pas publiques, nous utilisons le fichier VSIX pour l'installation.
+Ensuite, il faut compiler l'application avec des options spécifiques, car les protections SecSwift peuvent être activées à différents niveaux. Voici les options disponibles :
+•	-fsecswift-cfg : Active la fonctionnalité de vérification de flux de contrôle intra-fonction SecSwift.
+•	-fsecswift-ipcfg : Active la fonctionnalité de vérification de flux de contrôle inter-fonction SecSwift.
+•	-fsecswift-dup : Active la fonctionnalité de duplication de flux de calcul intra-fonction SecSwift.
+•	-fsecswift-ipdup : Active la fonctionnalité de duplication de flux de calcul inter-fonction SecSwift.
+Ces options peuvent être combinées. Par exemple, le niveau "all" consiste à appliquer toutes ces protections.
+Après l'exécution avec ces options, un fichier binaire est généré. C'est ce fichier binaire que l'on ouvre avec l'extension Disassembly Explorer. L'affichage se présente sous la forme de code assembleur coloré. La coloration dépend de la protection ajoutée : par exemple, le bleu indique la protection d'intégrité du flux de données.
+En survolant une ligne avec la souris, vous pouvez voir la protection appliquée. Cliquer sur une ligne permet d'ouvrir la ligne correspondante dans le code source. Les couleurs par défaut peuvent être modifiées dans les paramètres pour s'adapter à vos préférences.
+Pour plus de détails, j'ai rédigé un lab qui explique cette partie en profondeur.
 
-Visual Studio Code, souvent appelé VS Code, est un éditeur de code source développé par Microsoft.  Il est disponible sur Windows, macOS et Linux, ce qui le rend accessible à tous (Multiplatforme). Il  prend en charge de nombreux langages de programmation, tels que JavaScript, Python, C++, et bien d'autres.
-VSCode est un IDE (environnement de développement intégré), et comme toute ide on peut etendre ses fonctionalités, Dans eclipse et dans inteliji on appel plugin, dans vs code on appel extension
-Il dispose d'une vaste bibliothèque d'extensions pour ajouter des fonctionnalités supplémentaires comme IntelliSence, github, Remote-ssh, Prettier, Docker
+STxP SecSwift Annotations:
+Lorsque les protections SECSWIFT sont activées lors de la compilation d'un fichier source, un rapport peut être généré pour indiquer quelles protections ont été appliquées et où elles se trouvent dans le code. Cette extension lit les fichiers .opt.yaml générés par le compilateur pour afficher les annotations SecSwift.
+Son installation se passe comme pour l’extension desasec, le fichier vsix
+Ensuite ajouter l’option -fseecswift-annotate lors de l’execution
+Un nouvau onglet sera dispo sur la partie terminal view, ou on pourra voir les annotations, il est possible de voir les annotations directement dans le code source aussi
+Cette partie est également bien detaillé dans le lab
 
 
-STxP Compiler Explorer
-This extension allows you to compile code through Compiler Explorer view integrated in VSCode. To use this feature, you will need to open the file you wish to compile. Then, open the Command Palette and search Compile with Compiler Explorer.
+Concrètement ce que j’ai fait sur ces deux extensions :
+Analyse et correction de bug
+Ecrire le labs
+Renforcer la validation des extensions à travers des test unitaires
 
+
+
+je vais maintenant vous parler de la deuxième partie de mon stage, qui concerne SecSwift. En résumé, SecSwift est un générateur de code automatique conçu pour protéger contre les attaques par injections de fautes. Ce module de cybersécurité permet à l'utilisateur de contrôler où et quelles protections appliquer. Il est déjà intégré dans le compilateur STxP5 Clang/LLVM.
+SecSwift propose trois types de protections principales : …
+Je viens de commencer à travailler sur cette partie du stage, actuellement je suis sur l'analyse. Mon objectif est d'améliorer les informations émises par SecSwift. Pour cela, je développe des algorithmes et j'analyse l'exécution du code à l'aide de GDB ou de traces.
+L'objectif principal de mon travail est d'améliorer la qualité des informations fournies par SecSwift. Cela inclut l'ajout de nouvelles informations et le renforcement de la validation grâce à des vérifications automatiques. 
+
+
+
+Numeroter les slides, 
+les labs seront dispo sur la release du prochain toolset dans la prochain semaine
+decupler le slide 8, liaison compi et vs (dwarf)
+changement de modèle pour gagner en precision, chema de secswift vers vscode
+dernière ligne -> verification dans vscode
+Parler calmement
