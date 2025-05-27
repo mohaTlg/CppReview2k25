@@ -1,14 +1,22 @@
-Bonjour à tous, Je suis D… aujourd’hui je fais une presentation sur l’evolution de mon stage intutulé «VSCode Extension pour un module de cybersecurity du compilateur LLVM ». Je suis accompagné de mes deux encadreurs, CR et FDF, de l'équipe CCC. Oui, j'ai la chance d'avoir deux encadreurs pour m'accompagner dans cette aventure !
+Bonjour à tous, Je suis D… aujourd’hui je fais une presentation sur l’evolution de mon stage intutulé «VSCode Extension pour un module de cybersecurity du compilateur LLVM ». Je suis accompagné de mes deux encadreurs, CR et FDF, de l'équipe CCC. [Oui, j'ai la chance d'avoir deux encadreurs pour m'accompagner dans cette aventure ! ]10x
 
-Pour commencer, je vais me présenter, partager quelques informations sur moi-même et expliquer ce qui m'a motivé à choisir ce stage. Ensuite, je vous donnerai une vue d'ensemble de VSCode pour établir le contexte global.
-Nous passerons ensuite aux extensions VSCode, en nous concentrant sur celles développées au sein de l'équipe CCC. Puis, parler de SecSwift je vous expliquerai le lien entre SecSwift et ces extensions VSCode.
-Enfin, je terminerai par les perspectives futures.
+Pour commencer, je vais me présenter, partager quelques informations sur moi et expliquer ce qui m'a motivé à choisir ce stage. Ensuite, je vous parlerai un peu de secswift avant de vous donner une vue d'ensemble de VSCode.
+Nous passerons ensuite aux extensions VSCode, en nous concentrant sur celles développées au sein de l'équipe CCC. Puis, parler de ce que je fais sur SecSwift et le lien entre SecSwift et les extensions VSCode.
+Enfin, je terminerai par les perspectives. 20x
 
-Je m'appelle Diallo Moh..., étudiant en Master Informatique à l'ISIMA, au sein de l'INP de Clermont-Ferrand. J'ai commencé mon stage début avril, il y a environ un mois et demi, et je serai ici jusqu'au début août, soit une durée totale de quatre mois.
-Ce stage m'a attiré pour deux raisons principales. La première est ma passion pour JavaScript. Lorsque j'ai découvert que le stage impliquait le développement d'une extension pour VS Code, j'ai immédiatement été séduit par l'idée de travailler avec TypeScript et JavaScript, qui sont mes langages de programmation favoris.
-La seconde raison est liée le terme "compilation". Cela m'a rappelé mes cours de compilation et d’architecture d’ordinateur,  au cours desquels j'ai réalisé deux projets en assembleur : l'un consistait à créer une calculatrice, et l'autre à développer un système d'enregistrement utilisateur. J'avais beaucoup apprécié ces projet, notamment l'utilisation de labels et de sauts (les jump) pour implementer les structures de contrôle comme les conditions et les boucles. Bien que ce soit complexe en l’assembleur, j’ai bien aimé car en tant que passionné de jeux vidéo, depuis mon enfance, j'ai l'habitude de me confronter à des défis qui nécessitent une réflexion approfondie. Je me suis dit qu'il serait intéressant de voir comment ces concepts sont appliqués dans un contexte professionnel.
+Je m'appelle Diallo Moh..., étudiant en Master Informatique à l'ISIMA, au sein de l'INP de Clermont-Ferrand. J'ai commencé mon stage début avril, et je serai ici jusqu'en début août, soit une durée totale de quatre mois.
+Ce stage m'a attiré pour deux raisons principales. La première est ma passion pour JavaScript. Lorsque j'ai découvert que le stage impliquait le développement d'une extension VS Code, j'ai immédiatement été séduit par l'idée de travailler avec TypeScript et JavaScript, qui sont mes langages de programmation favoris.
+La seconde raison est liée au terme "compilation". Cela m'a rappelé mes cours de compilation et d’architecture d’ordinateur,  au cours desquels j'ai réalisé deux projets en assembleur : l'un consistait à créer une calculatrice, et l'autre à développer un système d'enregistrement utilisateur. J'avais beaucoup apprécié ces projet, notamment l'utilisation de labels et des jump pour implementer les conditions et les boucles. Bien que ce soit complexe en assembleur, j’ai bien aimé car en tant que passionné de jeux vidéo, j'ai l'habitude de me confronter à des défis qui nécessitent une réflexion approfondie. Je me suis dit qu'il serait intéressant de voir comment ces concepts sont appliqués dans un contexte professionnel. 20x
 
 
+
+
+Un petit rappel sur secswift, 
+SecSwift est un générateur de code automatique conçu pour protéger contre les attaques par injections de fautes. Ce module de cybersécurité permet à l'utilisateur de contrôler où et quelles protections appliquer. Il est déjà intégré dans le compilateur STxP5 Clang/LLVM.
+SecSwift propose trois types de protections:
+•	Dataflow Protection : Assure l'intégrité des données.
+•	Control-flow Protection : Garantit que l'exécution du programme suit le chemin prévu.
+•	Memory Protection : Sécurise l'accès à la mémoire. 20x
 
 
 Visual Studio Code, souvent appelé VS Code, est un éditeur de code source développé par Microsoft qui a rapidement gagné en popularité parmi les développeurs. Dans le sondage auprès des développeurs réalisé par Stack Overflow en 2023, Visual Studio Code a été classé comme l'outil d'environnement de développement (IDE) le plus populaire, avec plus de 73 % des 86 544 répondants déclarant l'utiliser. Ce qui distingue VS Code, c'est sa capacité à être léger et rapide tout en offrant une extensibilité remarquable. Disponible sur Windows, macOS et Linux, il est accessible à une large gamme d'utilisateurs, ce qui en fait un choix universel pour le développement.
@@ -22,18 +30,7 @@ Microsoft fournit également une documentation exhaustive et des tutoriels acces
 
 
 
-L'équipe CCC a déjà créé plusieurs extensions pour Visual Studio Code, chacune apportant des fonctionnalités spécifiques pour améliorer l'expérience de développement :
-•	STxP Compiler Explorer : Cette extension permet de compiler du code via une vue intégrée de Compiler Explorer dans VS Code.
-•	STxP Debug Tools : Elle implémente un adaptateur de débogage pour SXGDB et introduit de nouvelles commandes, des extraits de configuration, ainsi que des vues telles que le désassemblage et la microtrace.
-•	STxP Disassembly Explorer : Cette extension permet la navigation croisée entre le code source C et le code désassemblé correspondant, avec une mise en évidence spécifique des lignes d'assemblage SecSwift.
-•	STxP Memory Mapping : Cette extension calcule et affiche la cartographie mémoire des variables dans un fichier binaire.
-•	STxP Profiling : Elle fournit une visualisation sous forme de flamegraph du profilage d'un fichier binaire.
-•	STxP Project Manager : Permet de créer et de configurer un nouveau projet avec une configuration spécifique.
-•	STxP Remote Helper : Fournit des outils pour travailler dans un environnement remote-ssh.
-•	STxP Rompatch Configuration : Offre une interface graphique pour générer un rompatch pour une application.
-•	STxP SecSwift Annotations : Étend Visual Studio Code avec la complétion de mots-clés SecSwift et des annotations intégrées dans l'éditeur.
-•	STxP Versions : Affiche la version de l'ensemble d'outils dans une Webview de Visual Studio Code.
-Pour le moment j’ai principalement travaillé sur les extensions STxp disassembly Explorer et secswift annotation
+L'équipe CCC a déjà créé plusieurs extensions pour Visual Studio Code, mais pour cette presentation nous allons nous focaliser sur ceux sur lesquelles j’ai contribué : STxp disassembly Explorer et secswift annotation
 STxP Disassembly Explorer de VSCode fournit une vue en assembleur du code binaire où les instructions générées par SecSwift sont mises en évidence. Ces informations sont utiles pour vérifier que les protections sont effectivement présentes dans le code binaire final de l'application et pour examiner le code généré. Dans cette vue, les différentes protections SecSwift sont mises en évidence par des couleurs différentes, offrant une vue claire de quelles protections sont générées, où et comment.
 Comment l’utiliser ?
 Déjà il faut commencer par l’installer : il ya deux façons d’installer des extensions sur vscode, soit passer par le marketplace ou via vsix,  Étant donné que nos extensions ne sont pas publiques, nous utilisons le fichier VSIX pour l'installation.
@@ -62,8 +59,8 @@ Renforcer la validation des extensions à travers des test unitaires
 
 
 
-je vais maintenant vous parler de la deuxième partie de mon stage, qui concerne SecSwift. En résumé, SecSwift est un générateur de code automatique conçu pour protéger contre les attaques par injections de fautes. Ce module de cybersécurité permet à l'utilisateur de contrôler où et quelles protections appliquer. Il est déjà intégré dans le compilateur STxP5 Clang/LLVM.
-SecSwift propose trois types de protections principales : …
+je vais maintenant vous parler de la deuxième partie de mon stage, qui concerne SecSwift. 
+
 Je viens de commencer à travailler sur cette partie du stage, actuellement je suis sur l'analyse. Mon objectif est d'améliorer les informations émises par SecSwift. Pour cela, je développe des algorithmes et j'analyse l'exécution du code à l'aide de GDB ou de traces.
 L'objectif principal de mon travail est d'améliorer la qualité des informations fournies par SecSwift. Cela inclut l'ajout de nouvelles informations et le renforcement de la validation grâce à des vérifications automatiques. 
 
@@ -75,3 +72,5 @@ decupler le slide 8, liaison compi et vs (dwarf)
 changement de modèle pour gagner en precision, chema de secswift vers vscode
 dernière ligne -> verification dans vscode
 Parler calmement
+
+Secswift 
