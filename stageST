@@ -7,3 +7,10 @@ Les instructions dans les sets DUP et CFG dans ton analyse doivent être marqué
 MI->setFlag(SecSwift_...); 
 Dans STxP5SecSwiftPeephole.cpp, il faut faire ton analyse dans une fonction indépendante, à faire tourner avant la boucle qui va supprimer les SECSWIFT_*INFO 
 Il faudra aussi ajouter la suppression des SECSWFT_DUPINFO, comme SECSWIFT_SIGINFO 
+
+avec cette structure: 
+Elle	donne	le	cadre	scientifique	et	technique	du	travail	réalisé.
+Elle	doit :
+-		présenter	le	problème	dans	son	contexte large	
+-		préciser	le	sujet	du	travail	à	faire,	ses	limites,	donner	la	problématique.
+-		annoncer	le	plan	du	rapport
