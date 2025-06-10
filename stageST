@@ -14,3 +14,14 @@ Elle	doit :
 -		présenter	le	problème	dans	son	contexte large	
 -		préciser	le	sujet	du	travail	à	faire,	ses	limites,	donner	la	problématique.
 -		annoncer	le	plan	du	rapport
+
+voici mon introduction globale:
+Dans le cadre de ma première année de Master Informatique à l’ISIMA, j’ai effectué un stage d’une durée de 4 mois au sein de l’entreprise STMicroelectronics, l’un des leaders mondiaux dans la conception et la fabrication de semi-conducteurs. Ce stage s’est déroulé au sein de l’équipe Computing and Compilers Center (CCC) de la division Digital Technology (DT) sur le site de Grenoble. Cette équipe est responsable du développement de compilateurs et d’outils destinés aux processeurs conçus par la division Microcontrollers and Digital ICs Group (MDG). La division MDG fournit des produits pour divers secteurs, notamment l’automobile, l’industrie, le spatial et l’Internet des objets (IoT).
+La sécurité des systèmes informatique est un enjeu majeur pour STMicroelectronics, parmi les nombreuses menaces identifiées, les attaques par injection de faute occupent une place importante. Ces attaques, qui exploitent des altérations physiques ou logicielles du comportement normal d’un programme, peuvent compromettre l’intégrité des données et modifier la logique d’exécution, entraînant des vulnérabilités exploitables.
+C’est dans ce contexte que l’équipe a développé SecSwift, un module de cybersécurité conçu pour générer automatiquement des contre-mesures protégeant contre les attaques par injection de fautes. Cependant, l’utilisation de SecSwift nécessite des interfaces adaptées pour être exploités efficacement, c’est dans ce cadre que des extensions pour l’environnement de développement Visual Studio Code (VSCode) ont été développé.
+Ma mission principale est d’améliorer la restitution des informations produites par SecSwift à destination de l’utilisateur. Cette amélioration visait deux volets :
+-	Dans un premier temps, le travail s’est focalisé sur les extensions vscode, destinées à restituer de façon visuelle les informations émises par le compilateur, dans le code source et dans le code binaire compilé. 
+L’objectif était de corriger d’éventuelles imprécisions, fournir une documentation explicite pour l’utilisateur et proposer des mécanismes de vérification automatique afin de garantir que le comportement de ces extensions n’est pas dégradé lors d’une évolution du compilateur ou de l’interface VSCode
+-	Dans un second temps, au niveau du compilateur LLVM ciblant l’architecture RISC-V, il s’agissait d’améliorer la précision les informations émises par SecSwift et d’en ajouter de nouvelles qui seront exploités par les extensions VSCode pour la restitution visuelle.
+
+j'ai dejà fait la presentation de l'entreprise, je veux que tu me fasse la presentation du sujet de stage
