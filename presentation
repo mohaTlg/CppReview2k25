@@ -53,9 +53,9 @@ Cette partie est également bien detaillé dans le lab
 
 
 Concrètement ce que j’ai fait sur ces deux extensions :
-Analyse et correction de bug
-Ecrire le labs
-Renforcer la validation des extensions à travers des test unitaires
+Analyse et correction de bug : cette partie m'as aidé à m'integrer rapidement sur le projet et decouvrir l'environnement de developement des extensions vscodes
+Ecrire le labs : m'as permis de comprendre en detail ces deux extensions, ce labs est dejà livré et disponible dans la toolset
+Renforcer la validation des extensions à travers des test unitaires : m'as permis de decouvrir vscode extension tester
 
 
 
