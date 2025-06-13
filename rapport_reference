@@ -1,0 +1,205 @@
+7 Extension pour la cyber-sécurité : SecSwift
+SecSwift est une extension implémentée dans le compilateur LLVM propriétaire de ST afin
+d’intégrer des solutions de sécurité pour contrer les attaques par canaux auxiliaires ou par
+injection de fautes. L’objectif de cette intégration est de sécuriser les processeurs fournis par
+STMicroelectronics, contourner la rétro-ingénierie ainsi que les données traitées par ces-dits
+processeurs, et d’ajouter un support de détection d’erreur dans des systèmes critiques tels que
+l’automobile (Software Fault Tolerant).
+Nous allons dans cette partie discuter de l’intérêt d’une extension pour Visual Studio Code,
+afin de proposer aux utilisateurs une vue dédiée à la visualisation des remarques, du code
+assembleur associé ainsi que de la complétion de code.
+7.1 Support des remarques du compilateur Clang
+Les remarques émises par le compilateur incluant SecSwift sont de nature similaire à celles
+du compilateur natif LLVM/Clang. Elles sont émises lors de la compilation, soit sur la sortie
+standard, soit dans un fichier objet "YAML" dédié. Nous allons construire notre extension afin
+de visualiser dans l’éditeur les remarques dans les deux cas d’utilisation.
+7.1.1 Support des remarques à la compilation
+Les remarques SecSwift sont émises au même format que celles des Error et Warning. Nous
+allons créer un nouveau type de problème, Remarks. Ces dernières seront à un niveau informatif
+car elles n’influencent pas l’issue de la compilation.
+18
+Visual Studio Code utilise la définition d’expressions régulières afin de récupérer séparément
+les attributs à la compilation. Ces attributs contiennent une définition du fichier source, des
+références vers les lignes et colonnes concernées, le corps du message ainsi qu’un type et un code
+d’erreur. Le support des remarques SecSwift passe alors par la redéfinition de cette expression.
+Voici le type de définition d’un Problem Matcher :
+1 " problemMatcher ": {
+2 " name ": " clang ",
+3 " fileLocation ": [
+4 " relative ",
+5 " ${ workspaceFolder }"
+6 ],
+7 " pattern ": {
+8 " regexp ": "^(.*) : (\\ d +):(\\ d +):\\ s +( warning | error | remark )
+:\\ s +(.*) \\[ (.*) \\]$ ",
+9 " file ": 1,
+10 " line ": 2,
+11 " column ": 3,
+12 " severity ": 4,
+13 " message ": 5,
+14 " code ": 6
+15 },
+16 " severity ": " info ",
+17 " source ": " Clang ",
+18 " label ": " Clang ",
+19 }
+Ce dernier définit en tant qu’objet pattern le type de sortie attendu après la compilation. Nous
+déclarons par cette expression régulière que la sortie d’une remarque, d’une erreur ou d’une
+attention est du format :
+source :fichier :ligne :colonne :severité :message :[type-erreur]
+Nous définissons par défaut le type d’erreur à Information afin que les remarques soient déclarées comme telles. Les informations de type Warning, Error seront déclarées avec la sévérité
+adéquate.
+Toutes les tâches d’exécution du compilateur doivent alors suivre cette définition afin que
+les problèmes soient remontés à l’éditeur.
+7.1.2 Support des remarques par l’utilisation du fichier généré YAML
+Clang/LLVM propose de générer dans un fichier YAML les sorties des remarques à la
+compilation. Celles de SecSwift en font partis. Ces remarques sont structurées de la façon
+suivante (voir : [6]) :
+— <TYPE> - est un attribut inclus dans l’ensemble Passed, Missed, Analysis, AnalysisFPCommute, AnalyseAliasing, Failure
+— Pass : <pass> - La passe courante de la remarque. Ici, la passe concerne SecSwift
+— DebugLocFile : <file>, Line : <line>, Column : <column> - DebugLoc est un objet
+contenant les références vers le fichier source concerné par la remarque. Cette localisation
+contient les attributs nécessaires à l’ajout d’une remarque vers un éditeur.
+— Function : <function> - Nom de la fonction associée à la remarque
+19
+— Args : <key> : <value> | DebugLoc - Objet contenant une multitude d’arguments
+associés à la remarque. Ceux-ci peuvent être des paires clés/valeurs, ou un objet de type
+DebugLoc.
+Afin d’afficher ces remarques dans l’éditeur, il est nécessaire de localiser tous les fichiers
+YAML dans le répertoire courant. Nous allons dans ce cadre utiliser l’interface programmatique de Visual Studio Code afin de récupérer le contenu de tous les fichiers avec l’extension
+.opt.yaml. Une fois effectué, nous pouvons lire et effectuer la transformation du YAML en un
+objet utilisable nativement en TypeScript, le format JSON. Ce format objet permettra de lire
+ces arguments et de les traiter en conséquence.
+Figure 9 – Remarques SecSwift intégrées à l’éditeur
+Nous proposons également des Code Lenses 8 permettant de visualiser les annotations générées par SecSwift directement dans l’éditeur de code C/C++ de Visual Studio Code.
+Figure 10 – Remarques SecSwift depuis les Code Lenses
+Cette intégration permet de visualiser les remarques directement dans le flot de développement de code.
+Nous avons intégré, de la même manière, une vue dédiée à la génération des remarques,
+séparées des erreurs transmises à la compilation. Cette vue fait suite à une demande utilisateur
+après plusieurs livraisons de versions de l’extension SecSwift.
+8. Nom donné par Microsoft pour des éléments disposés de façon entrelacée dans l’éditeur
+20
+Figure 11 – Remarques listées dans une Tree View
+
+
+7.2 Vue assembleur associée aux remarques générées par Clang
+Par le biais de nos extensions, nous avons également pour projet de proposer une vue désassembleur avec une visualisation des instructions natives et des instructions ayant été insérées
+par le module SecSwift.
+A l’heure actuelle, nous proposons une extension permettant d’afficher du code assembleur
+grâce aux informations de débogage de l’exécutable, puis nous générons, en utilisant objdump,
+un fichier de désassemblage.
+Figure 12 – Désassemblage et visualisation de code dans l’éditeur
+L’objectif de l’extension est de surligner en une nouvelle couleur les instructions ayant été
+générées par l’outil SecSwift.
+
+---------------------------------------------------------------------------------------------------------------
+8 Développement et intégration d’un environnement de
+tests
+Avant de livrer nos extensions, il est nécessaire de s’assurer de la qualité et du bon fonctionnement de ces dernières. Les tests doivent permettre de vérifier le comportement des outils
+proposés, de la non-régression des développements, et doivent être maintenus à jour afin de
+suivre l’évolution de l’éditeur et des features proposées.
+8.1 Utilisation du framework RedHat VS Code Tester et Selenium
+Webdriver
+Afin de développer des tests d’intégration, nous avons cherché par quels moyens y parvenir.
+Visual Studio Code utilise Electron et l’environment NodeJS pour fonctionner, ce qui le rend
+très proche d’un navigateur web classique.
+Nous avons effectuer quelques recherches et nous sommes tombés sur un framework nommé
+VS Code Extension Tester. Celui-ci est un outil de tests développé par Red Hat qui a pour
+objectif de réaliser des tests E2E (end-to-end), ce qui correspond à ce que nous cherchons.
+L’outil permet de contrôler, vérifier et piloter le navigateur grâce au driver Selenium. Ce
+dernier est un framework permettant de tester une multitude d’applications web, et permet de
+réaliser des tests fonctionnels dans de multiples langages, notamment JavaScript.
+Pour fonctionner, Selenium Webdriver ouvre une instance de Visual Studio Code (ou n’importe quel navigateur) et peut le contrôler grâce au driver spécifique ChromeDriver.
+Une fois configuré, il est nécessaire de procéder à la description et à l’écriture de jeux de
+tests complets afin de vérifier la bonne intégration de nos extensions, notamment l’extension
+de templates, de debugging et SecSwift.
+8.2 Tests de l’interface utilisateur
+Afin de développer nos tests, nous nous basons sur les scénarios développés sous Eclipse
+depuis RCPTT. La suite de test est complète et permet également de lister les limitations
+courantes de l’éditeur VS Code.
+Les scénarios retenus sont principalement ceux utilisant les fonctionnalités de création de
+projet, de configuration de lancement et de débogage. Nous avons pu tester :
+22
+1. L’exécution de code C/C++ sur simulateur ST RISC-V
+2. L’import des templates C/C++
+3. La construction automatique du launch.json
+4. Les règles du Makefile grâce à l’extension Task Explorer
+5. Le support des variables anonymes C/C++
+6. La vue et le contenu de la microtrace
+7. Les sorties "GDB Traces" et "GDB Console"
+8. Les watchpoints, breakpoints, interruptions
+9. Le choix des options CPU
+Pour récupérer les informations utiles affichées à l’écran, nous utilisons le débogueur intégré
+à Visual Studio Code (Developer Tools). Avec cela, nous sommes capables de récupérer la classe
+d’un élément affiché afin de l’analyser lors de l’exécution de la suite de tests.
+9 Ecriture de différentes documentations
+L’écriture des documentations a pour objectif d’informer les utilisateurs courants et futurs
+sur les fonctionnalités disponibles et la façon d’utiliser l’éditeur.
+Nous fournissons par ce biais de multiples documentations
+1. Documentation utilisateur : Permet de guider l’utilisateur final sur l’installation et l’utilisation de l’environnement
+2. Documentation développeur : Permet de décrire les prérequis et la méthodologie pour le
+développement d’extensions ainsi que les tests
+Nous proposons également deux documents permettant de décrire les principales fonctionnalités attendues pour Visual Studio Code, ainsi que les limitations.
+1. VS Code vs STWorkbench : Décrit les fonctionnalités supportées dans les deux IDEs
+2. Limitations_Tests : Décrit les scénarios de tests et la fonctionnalité testée.
+9.1 Documentation utilisateur
+La documentation utilisateur permet de montrer les principales fonctionnalités de l’éditeur,
+allant de l’installation de l’éditeur pour les environnements Linux et Windows supportés par
+notre suite d’outils, ainsi que l’installation des extensions, la création de projets C/C++, jusqu’à
+l’exécution de session de débogage.
+Cette documentation se veut la plus complète possible et évolutive en fonction des manquements pouvant être remontés par les utilisateurs. Elle est également complétée par des captures
+d’écran spécifique aux environnements. Elle est destinée à être intégrée dans les suites livrées
+par ST avec le support de Visual Studio Code.
+9.2 Documentation développeur
+Afin de faciliter les étapes d’initialisation pour les nouveaux développeurs du projet, nous
+avons pu décrire, dans une documentation utilisateur, toutes les phases allant de l’installation
+des outils, de l’éditeur, et du clonage du projet disponible sous git.
+Cette documentation est dédiée au projet et est disponible pour chaque personne voulant
+prendre en main l’environnement de développement.
+Elle permet également de lister les problèmes que nous avons pu rencontrer dans notre phase
+de développement, décrit les variables d’environnement à paramétrer afin, notamment, d’avoir
+les accès à Internet avec NodeJS.
+23
+10 Intégration dans la suite d’outils
+La livraison de nos composants est une étape cruciale dans notre développement. Elle permettra, lors du packaging de la suite d’outils en un exécutable installable ou une archive, d’y
+intégrer nos nouveaux composants. En livrant nos documentations et nos extensions, nous
+proposerons aux utilisateurs la possibilité d’utiliser Visual Studio Code pour leurs différents
+besoins.
+La livraison est notamment composée des extensions, au format VSIX, d’une documentation
+utilisateur, d’une comparaison de l’outil de référence STWorkbench et de notre nouvel éditeur
+VS Code, ainsi que des scripts d’installation.
+10.1 Intégration des différentes documentations
+Nous avons produit, afin de décrire les travaux effectués et les limitations, différentes documentations.
+Le document VS Code vs ST Workbench est essentiel pour les clients et les utilisateurs
+internes de la suite d’outils car il permet de décrire les fonctionnalités proposées par les deux
+éditeurs, et également découvrir les limitations courantes.
+Nous avons également produit une documentation VS Code for STxP5 qui est un guide
+pas-à-pas décrivant la procédure afin d’installer, de créer un projet, de lancer une session sur
+simulateur et de débogage SXGDB dans la toolset ST RISC-V.
+10.2 Intégration des extensions et des scripts
+Après le développement et le tests de nos extensions, nous allons pouvoir procéder à la
+livraison. Les livraisons se font sur la plateforme Artifactory de JFrog hébergée sur un serveur
+au sein de notre équipe. Artifactory (voir [5]) est un outil permettant le déploiement et la
+maintenance de binaires et d’artefacts afin de livrer, de façon organisée et ordonnée, une suite
+de composants.
+Pour nos extensions, nous avons décidés de créer un répertoire dédié vscode au coeur de notre
+produit. Ce répertoire contient un sous-répertoire labelisé Extensions contenant les produits au
+format VSIX ainsi que des scripts d’installation et désinstallation de VSIX.
+Dans la toolset, nous avons également inclus des scripts permettant de vérifier que l’environnement est prêt lors de l’exécution de Code. Nous avons labélisés les scripts sxcode et
+STxP_VSCode.bat. Ils permettent d’ouvrir Visual Studio Code avec la suite d’outils sourcée
+dans l’environnement, soit dans un Shell, soit depuis un raccourci bureau (Windows).
+10.3 Intégration de la suite de tests
+La suite de tests permet de tester l’intégration de nos extensions dans Visual Studio Code et
+vérifie l’usage des fonctionnalités telles que l’importation de templates, les lancements de session
+de débogage sur simulateur avec les principales commandes, la complétion dans le JSON, et
+également la vue microtrace.
+Les scripts de tests installent l’environnement adéquat, consistant en une copie de Visual
+Studio Code, des jeux de tests ainsi que du framework RedHat Extension Tester.
+Nous avons donc livrer cet outil en tant que composant de tests à l’équipe en charge de
+l’intégration. Il est également livré avec un script de tests permettant de sélectionner les jeux
+à effectuer (FPGA ou simulateur).
+24
+Les jeux de tests sont indépendents du système d’exploitation, ce qui les rend facile à rejouer.
+Cependant, ils dépendent de l’environnement de développement NodeJS qui doit être installé
+sur les machines dédiées à l’intégration.
+L’installation des dépendances requière également l’accès à Internet.
