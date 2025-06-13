@@ -45,7 +45,8 @@ En survolant une ligne avec la souris, vous pouvez voir la protection appliquée
 Pour plus de détails, j'ai rédigé un lab qui explique cette partie en profondeur.
 
 STxP SecSwift Annotations:
-Lorsque les protections SECSWIFT sont activées lors de la compilation d'un fichier source, un rapport peut être généré pour indiquer quelles protections ont été appliquées et où elles se trouvent dans le code. Cette extension lit les fichiers .opt.yaml générés par le compilateur pour afficher les annotations SecSwift.
+Lorsque les protections SECSWIFT sont activées lors de la compilation d'un fichier source, un rapport peut être généré pour indiquer quelles protections ont été appliquées 
+et où elles se trouvent dans le code. Cette extension lit les fichiers .opt.yaml générés par le compilateur pour afficher les annotations SecSwift.
 Son installation se passe comme pour l’extension desasec, le fichier vsix
 Ensuite ajouter l’option -fseecswift-annotate lors de l’execution
 Un nouvau onglet sera dispo sur la partie terminal view, ou on pourra voir les annotations, il est possible de voir les annotations directement dans le code source aussi
